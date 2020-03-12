@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response as BaseResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Illuminate\Contracts\Debug\ExceptionHandler as IlluminateExceptionHandler;
+use Throwable;
 
 class Handler implements ExceptionHandler, IlluminateExceptionHandler
 {
@@ -70,23 +71,24 @@ class Handler implements ExceptionHandler, IlluminateExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param \Exception $exception
+     * @param  \Throwable  $e
      *
      * @return void
+     * @throws \Exception
      */
-    public function report(Exception $exception)
+    public function report(Throwable $e)
     {
-        $this->parentHandler->report($exception);
+        $this->parentHandler->report($e);
     }
 
     /**
      * Determine if the exception should be reported.
      *
-     * @param  \Exception  $e
+     * @param  \Throwable  $e
      *
      * @return bool
      */
-    public function shouldReport(Exception $e)
+    public function shouldReport(Throwable $e)
     {
         return true;
     }
@@ -95,13 +97,13 @@ class Handler implements ExceptionHandler, IlluminateExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param \Dingo\Api\Http\Request $request
-     * @param \Exception              $exception
+     * @param \Throwable              $exception
      *
      * @throws \Exception
      *
      * @return mixed
      */
-    public function render($request, Exception $exception)
+    public function render($request, Throwable $exception)
     {
         return $this->handle($exception);
     }
@@ -110,11 +112,11 @@ class Handler implements ExceptionHandler, IlluminateExceptionHandler
      * Render an exception to the console.
      *
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param \Exception                                        $exception
+     * @param \Throwable                                        $exception
      *
      * @return mixed
      */
-    public function renderForConsole($output, Exception $exception)
+    public function renderForConsole($output, Throwable $exception)
     {
         return $this->parentHandler->renderForConsole($output, $exception);
     }
